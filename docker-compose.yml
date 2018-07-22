@@ -16,6 +16,12 @@ app:
   links:
     - rabbit
 
+userservice:
+  build: ./
+  dockerfile: ./docker/userservice/Dockerfile
+  links:
+    - rabbit
+
 rabbit:
   hostname: rabbit
   image: rabbitmq:latest
