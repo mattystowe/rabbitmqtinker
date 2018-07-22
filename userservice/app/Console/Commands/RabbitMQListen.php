@@ -43,11 +43,8 @@ class RabbitMQListen extends Command
       $connection = new AMQPStreamConnection('localhost', '8053', 'admin', 'mypass');
       $channel = $connection->channel();
       $channel->exchange_declare('DataServiceExchange', 'topic', false, false, false);
-      //die(print_r($channel->queue_declare("", false, false, true, false),true));
       list($queue_name, ,) = $channel->queue_declare("", false, false, true, false);
-      $channel->queue_bind($queue_name, 'DataServiceExchange', 'REQ.*.*');
-      //$channel->queue_bind($queue_name, 'DataService', 'UserRequests');
-
+      $channel->queue_bind($queue_name, 'DataServiceExchange', 'REQ.USER.UserRequests');
 
       echo " [*] Waiting for carrots. To exit press CTRL+C\n";
 
