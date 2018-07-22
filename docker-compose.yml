@@ -1,0 +1,29 @@
+web:
+  build: ./
+  dockerfile: ./docker/nginx/Dockerfile
+  volumes:
+    - ./:/var/www
+  ports:
+    - "3000:80"
+  links:
+    - app
+
+app:
+  build: ./
+  dockerfile: ./docker/app/Dockerfile
+  volumes:
+    - ./apiservice/:/var/www
+  links:
+    - rabbit
+
+rabbit:
+  hostname: rabbit
+  image: rabbitmq:latest
+  environment:
+    - RABBITMQ_DEFAULT_USER=admin
+    - RABBITMQ_DEFAULT_PASS=mypass
+  ports:
+    - "8051:4369"
+    - "8052:5671"
+    - "8053:5672"
+    - "8054:25672"
