@@ -19,8 +19,11 @@ app:
 userservice:
   build: ./
   dockerfile: ./docker/userservice/Dockerfile
+  volumes:
+    - ./userservice/:/var/userservice
   links:
     - rabbit
+    - mysqldb
 
 rabbit:
   hostname: rabbit
@@ -33,3 +36,16 @@ rabbit:
     - "8052:5671"
     - "8053:5672"
     - "8054:25672"
+
+mysqldb:
+    image: mysql:5.6
+    ports:
+        - "3306:3306"
+    volumes:
+        - ./docker/mysqldb/data:/var/lib/mysql
+        - ./docker/mysql/:/docker-entrypoint-initdb.d
+    environment:
+        MYSQL_DATABASE: userservice
+        MYSQL_USER: userservice
+        MYSQL_PASSWORD: password
+        MYSQL_ROOT_PASSWORD: root

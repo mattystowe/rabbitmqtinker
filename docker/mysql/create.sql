@@ -1,2 +1,2 @@
-create database if not exists stock;
-use stock;
+create database if not exists userservice;
+use userservice;
