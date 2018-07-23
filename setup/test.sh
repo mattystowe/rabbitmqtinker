@@ -1,11 +1,9 @@
 #!/bin/bash
 
 echo "API Service Tests"
-cd apiservice
-vendor/bin/phpunit
+docker exec -ti rabbitmqtinker_app_1 sh -c "vendor/bin/phpunit"
 #
 echo "User Service Tests"
-cd ../userservice
-vendor/bin/phpunit
-cd ../
+docker exec -ti rabbitmqtinker_userservice_1 sh -c "vendor/bin/phpunit"
+#cd ../
 #
