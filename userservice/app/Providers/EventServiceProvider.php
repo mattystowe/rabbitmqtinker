@@ -13,9 +13,18 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\Event' => [
-            'App\Listeners\EventListener',
-        ],
+      'App\Events\GetUserEvent' => [
+          'App\Listeners\GetUserListener',
+      ],
+      'App\Events\UserNotFoundEvent' => [
+          'App\Listeners\UserNotFoundListener',
+      ],
+      'App\Events\UserFoundEvent' => [
+          'App\Listeners\UserFoundListener',
+      ],
+      'App\Events\InvalidRequestEvent' => [
+          'App\Listeners\InvalidRequestListener',
+      ],
     ];
 
     /**

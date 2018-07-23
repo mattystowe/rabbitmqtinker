@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
-
+use App\Domain\Handlers\MessageHandler;
 
 class RabbitMQListen extends Command
 {
@@ -40,7 +40,14 @@ class RabbitMQListen extends Command
      */
     public function handle()
     {
-      $connection = new AMQPStreamConnection('localhost', '8053', 'admin', 'mypass');
+
+      $creds = [
+        'host'      =>  env('RABBITMQ_HOST'),
+        'port'      =>  env('RABBITMQ_PORT'),
+        'user'      =>  env('RABBITMQ_USER'),
+        'password'  =>  env('RABBITMQ_PASSWORD')
+      ];
+      $connection = new AMQPStreamConnection($creds['host'], $creds['port'], $creds['user'], $creds['password']);
       $channel = $connection->channel();
       $channel->exchange_declare('DataServiceExchange', 'topic', false, false, false);
       list($queue_name, ,) = $channel->queue_declare("", false, false, true, false);
@@ -50,6 +57,11 @@ class RabbitMQListen extends Command
 
       $callback = function ($msg) use ($channel) {
           echo ' [x] :', $msg->body . ' - ' . $msg->get('correlation_id'), "\n";
+
+          $handler = new MessageHandler($msg->body, $msg->get('correlation_id'));
+
+
+
           //
           //
           //publish back to the queue
@@ -70,6 +82,9 @@ class RabbitMQListen extends Command
 
           $message = new AMQPMessage(json_encode($response), $params);
           $channel->basic_publish($message, 'DataServiceExchange', 'RES.USER.UserResponses');
+
+
+
       };
 
       $channel->basic_consume($queue_name, '', false, true, false, false, $callback);

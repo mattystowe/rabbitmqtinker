@@ -5,6 +5,7 @@ namespace App\Application\User\Repository;
 use App\Services\UserDataService;
 use App\Domain\DataService\UserDataServiceMessage;
 use App\Exceptions\UserNotFoundException;
+use Log;
 
 class UserRepository {
 
@@ -27,7 +28,7 @@ class UserRepository {
 
   public function find(int $id)
   {
-    $msg = new UserDataServiceMessage('GetUser',1);
+    $msg = new UserDataServiceMessage('GetUser',$id);
     $this->dataService->consumeTopicWithCorrelationId(self::TOPIC_SUBSCRIBE, $msg->getCorrelationId());
     $this->dataService->publishToTopic($msg, self::TOPIC_PUBLISH);
     $res = $this->dataService->waitForResponse();
@@ -35,7 +36,8 @@ class UserRepository {
 
     //check MESSAGE_TYPE = for UserData or UserNotFound
     if ($res['MESSAGE_TYPE'] == 'UserData') {
-      return (array)$res['payload'];
+      $response = json_decode($res['payload']);
+      return (array)$response;
     }
     throw new UserNotFoundException("Not found",404);
 
