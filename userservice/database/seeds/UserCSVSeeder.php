@@ -23,7 +23,7 @@ class UserCSVSeeder extends Seeder
      */
     public function run()
     {
-      DB::table($this->table)->delete();
+      DB::table($this->table)->truncate();
       $csv = Reader::createFromPath($this->csv_path)->setHeaderOffset(0);
       $now = Carbon::now()->toDateTimeString();
       foreach ($csv as $record) {
