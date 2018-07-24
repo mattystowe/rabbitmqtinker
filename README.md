@@ -32,7 +32,7 @@ $ ./setup/rabbitlisten.sh
 ```sh
 $ ./setup/test.sh
 ```
-
+> **Note on tests:** Only a couple of tests have been added and include both functional and unit.  Services MUST be running for tests to run.  Normally should separate unit from functional - but time limitations etc etc...
 
 ### Todos
 
