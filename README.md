@@ -24,6 +24,7 @@ $ ./setup/stop.sh
   - Start services -
 ```sh
 $ ./setup/start.sh
+$ ./setup/rabbitlisten.sh
 ```
 
 # Tests
